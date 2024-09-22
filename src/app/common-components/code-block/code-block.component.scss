@@ -1,0 +1,33 @@
+.code-block {
+    width: 830px;
+    border-radius: 8px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        background-color: #2f2f2f;
+        color: #b4b4b4;
+        border-radius: 7px 7px 0 0;
+        font-size: 14px;
+        padding: 0 20px;
+        justify-content: space-between;
+
+        .copy-code {
+            cursor: pointer;
+        }
+    }
+
+    pre {
+        background-color: black;
+        padding: 16px;
+        overflow-x: auto;
+        border-radius: 0 0 7px 7px;
+    }
+
+    code {
+        font-family: 'Fira Code', monospace;
+        font-size: 14px;
+    }
+}

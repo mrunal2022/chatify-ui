@@ -1,0 +1,37 @@
+<div class="main-container">
+    <div class="row m-0">
+        <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible">
+            <app-side-nav-bar></app-side-nav-bar>
+        </div>
+        <div class="p-0 rightSection" [ngClass]="this.chatBotService.isSideNavVisible?'col-10' : 'col-12'">
+            <app-header></app-header>
+            <div class="msg-area-component" #msgArea>
+                <div class="msgsArea">
+                    <div *ngFor="let element of conversationHistory">
+                        <app-human-msg-box *ngIf="element.role==='user'" class="msg-box-component human-msg"
+                            [msg]="element.parts"></app-human-msg-box>
+                        <chatbot-msg-box *ngIf="element.role==='model'" class="msg-box-component"
+                            [msg]="element.parts"></chatbot-msg-box>
+                    </div>
+                    <app-custom-shimmer *ngIf="showShimmer" class="msg-box-component"></app-custom-shimmer>
+                </div>
+                <code-block></code-block>
+            </div>
+            <div class="inputTextBox">
+                <textarea matInput 
+                          placeholder="Enter your prompt here" 
+                          (input)="autoGrow($event)" 
+                          (input)="getInputPrompt($event)" 
+                          (keydown.enter)="onEnterKey($event)"
+                          rows="1"
+                          #textarea></textarea>
+                <i class="material-icons send-icon" 
+                   *ngIf="inputPromptLength > 0 && inputPrompt.trim().length>0" 
+                   (click)="sendPromptToChatbot()">send</i>
+              </div>              
+            <div class="disclaimer">
+                Chatify may display inaccurate info, including about people, so double-check its responses.
+            </div>
+        </div>
+    </div>
+</div>

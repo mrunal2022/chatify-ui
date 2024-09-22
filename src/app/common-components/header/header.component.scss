@@ -1,0 +1,30 @@
+.wrapper {
+    height: 70px;
+    background-color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .iconPic {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    .title {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        color: #1d1c1c;
+        font-family: Arial, sans-serif;
+        margin: 0px !important;
+        padding-left: 12px;
+    }
+}
+
+.wrapper {
+    ::ng-deep {
+        .bs-tooltip-bottom{
+            transform: translate(5px, 55px) !important;
+        }
+    }
+}
