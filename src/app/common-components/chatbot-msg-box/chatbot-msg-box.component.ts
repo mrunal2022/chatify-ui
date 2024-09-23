@@ -1,6 +1,5 @@
-import { Component, ComponentFactoryResolver, Input, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Input, ViewChild, ViewContainerRef } from '@angular/core';
 import { ChatbotService } from 'src/app/services/chatbot.service';
-import { CodeBlockComponent } from '../code-block/code-block.component';
 
 @Component({
   selector: 'chatbot-msg-box',
@@ -10,44 +9,46 @@ import { CodeBlockComponent } from '../code-block/code-block.component';
 export class ChatBotMsgBoxComponent {
   @Input() msg;
   formattedMessage: string = "";
-  typingSpeed: number = 8; // typing speed (ms per character)
+  typingSpeed: number =1; // typing speed (ms per character)
   @ViewChild('messageContainer', { read: ViewContainerRef, static: true }) messageContainer: ViewContainerRef;
 
-  constructor(private chatBotService: ChatbotService, private resolver: ComponentFactoryResolver) { }
+  constructor(private chatBotService: ChatbotService
+) { }
 
-  ngOnInit() {
-    this.formatText(this.msg[0].text);
-  }
+ngOnInit() {
+  this.formatText(this.msg[0].text);
+}
 
-  formatText(text: string) {
-    //make the text enclosed in ** BOLD, replace * with bullet point
-    //text enclosed in ``` is of code format
+formatText(text: string) {
+  // make the text enclosed in ** BOLD, replace * with bullet point
+  // text enclosed in ``` is of code format
 
-    this.chatBotService.isResProcessing = true;
-    const lines = text.split('\n');
+  this.chatBotService.isResProcessing = true;
+  const lines = text.split('\n');
 
     let formattedLines: any = lines.map(line => {
-      line = line.replace(/^\* /, '• ');
+    line = line.replace(/^\* /, '• ');
       line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      return line;
-    });
+    return line;
+  });
 
-    console.log(formattedLines);
-    this.typeText(formattedLines);
-  }
+  const finalText = formattedLines.join('\n');  
+  this.typeText(finalText);
+}
 
-  typeText(text) {
-    let charIndex = 0;
-    const interval = setInterval(() => {
-      if (charIndex < text.length) {
-        this.formattedMessage += text[charIndex];
-        charIndex++;
-      } else {
-        clearInterval(interval);
-        this.chatBotService.isResProcessing = false;
-      }
-    }, this.typingSpeed);
-  }
+typeText(text: string) {
+  let charIndex = 0;
+
+  const interval = setInterval(() => {
+    if (charIndex < text.length) {
+      this.formattedMessage += text[charIndex];
+      charIndex++;
+    } else {
+      clearInterval(interval);
+      this.chatBotService.isResProcessing = false;
+    }
+  }, this.typingSpeed ); 
+}
 
   // formatText(text: string) {
   //   this.chatBotService.isResProcessing = true;
