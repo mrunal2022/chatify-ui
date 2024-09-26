@@ -7,15 +7,18 @@
             <app-header></app-header>
             <div class="msg-area-component" #msgArea>
                 <div class="msgsArea">
-                    <div *ngFor="let element of conversationHistory">
-                        <app-human-msg-box *ngIf="element.role==='user'" class="msg-box-component human-msg"
-                            [msg]="element.parts"></app-human-msg-box>
-                        <chatbot-msg-box *ngIf="element.role==='model'" class="msg-box-component"
-                            [msg]="element.parts"></chatbot-msg-box>
+                    <div *ngFor="let element of conversationHistory ; let i = index">
+                        <div id="humanMsgBox{{i}}">
+                            <app-human-msg-box  *ngIf="element.role==='user'" class="msg-box-component human-msg"
+                                [msg]="element.parts"></app-human-msg-box>
+                        </div>
+                        <div  id="robotMsgBox{{i}}">
+                            <chatbot-msg-box *ngIf="element.role==='model'" class="msg-box-component"
+                                [msg]="element.parts"></chatbot-msg-box>
+                        </div>
                     </div>
                     <app-custom-shimmer *ngIf="showShimmer" class="msg-box-component"></app-custom-shimmer>
                 </div>
-                <!-- <code-block></code-block> -->
             </div>
             <div class="inputTextBox">
                 <textarea matInput 

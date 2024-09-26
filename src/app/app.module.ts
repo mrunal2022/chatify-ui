@@ -16,6 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ShimmerModule } from '@sreyaj/ng-shimmer';
 import { CustomShimmerComponent } from './common-components/custom-shimmer/custom-shimmer.component';
 import { CodeBlockComponent } from './common-components/code-block/code-block.component';
+import { PlainTextComponent } from './common-components/plain-text/plain-text.component';
+import { HighlightCodePipe } from './pipes/highlight-code.pipe';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { CodeBlockComponent } from './common-components/code-block/code-block.co
     SideNavBarComponent,
     HumanMsgBoxComponent,
     CustomShimmerComponent,
-    CodeBlockComponent
+    CodeBlockComponent,
+    PlainTextComponent,
+    HighlightCodePipe,
   ],
   imports: [
     BrowserModule,
