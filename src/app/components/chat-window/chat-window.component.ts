@@ -52,13 +52,39 @@ export class ChatWindowComponent {
   }
 
   onEnterKey(event) {
-    if (this.chatBotService.isResProcessing ) {
+    if (this.chatBotService.isResProcessing) {
       event.preventDefault();  // Prevent Enter key if the API call is still in progress
     }
     else if (!this.chatBotService.isResProcessing) {
       event.preventDefault();  // Prevent adding a new line with Enter key
       this.sendPromptToChatbot();
     }
+  }
+
+  scrollToHumanMsg(index: number) {
+    setTimeout(() => {
+      const humanMsgBox = document.getElementById(`humanMsgBox${index}`);
+
+      if (humanMsgBox) {
+        humanMsgBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 1000);
+  }
+
+  scrollRobotMsg(index: number) {
+    setTimeout(() => {
+      const robotMsgBox = document.getElementById(`robotMsgBox${index}`);
+      if (robotMsgBox) {
+        robotMsgBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 1000);
+  }
+
+  scrollToMsg(index, msgType) {
+    setTimeout(() => {
+      let msgBox = document.getElementById(`${msgType[index]}`);
+      msgBox?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 1000);
   }
 
   clearTextArea() {
@@ -79,7 +105,7 @@ export class ChatWindowComponent {
         role: "user",
         parts: partsTemp
       });
-
+      this.scrollToHumanMsg(this.conversationHistory.length - 1);
       this.callGeminiApi();
     }
   }
@@ -97,6 +123,7 @@ export class ChatWindowComponent {
         role: "model",
         parts: partsTemp
       });
+      this.scrollRobotMsg(this.conversationHistory.length - 1);
       this.showShimmer = false;
     });
   }
