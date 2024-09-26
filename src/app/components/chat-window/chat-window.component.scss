@@ -1,0 +1,81 @@
+// https://icolorpalette.com/color/greyish-purple#google_vignette
+//#813FA4 bg chat
+
+.main-container {
+    height: 100vh;
+    background-color: #f5f3f6;
+
+    .row {
+        height: 100%;
+
+        .navBar {
+            background-color: #cec5d2;
+        }
+
+        .rightSection {
+            height: 100%;
+            overflow-y: hidden;
+
+            .msg-area-component {
+                height: calc(100vh - (70px + 100px));
+                overflow-y: auto;
+                margin-bottom: 10px !important;
+
+                .msgsArea {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    margin-top: 36px;
+
+                    .msg-box-component {
+                        display: flex;
+                        justify-content: center;
+                    }
+                }
+
+                .human-msg {
+                    margin-left: 45px;
+                }
+            }
+
+            .inputTextBox {
+                display: flex;
+                justify-content: center;
+
+                textarea {
+                    width: 850px;
+                    padding: 14px 51px 14px 14px;
+                    border: transparent;
+                    background: #e9e5eb;
+                    border-radius: 15px;
+                    max-height: 200px !important;
+                }
+
+                textarea:focus-visible {
+                    outline: none;
+                    border: none !important;
+                }
+
+                .send-icon {
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    right: 4.0%;
+                    color: #916da0;
+                    font-size: 34px;
+                    cursor: pointer;
+                }
+            }
+
+            .disclaimer {
+                display: flex;
+                justify-content: center;
+                padding-top: 7px;
+                font-size: 14px;
+                font-weight: 400;
+                letter-spacing: 17.015rem;
+                letter-spacing: 0.01rem;
+            }
+        }
+    }
+}
