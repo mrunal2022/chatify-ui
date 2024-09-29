@@ -9,12 +9,13 @@ import { ChatbotService } from 'src/app/services/chatbot.service';
   styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent {
-  constructor(public chatBotService: ChatbotService) { }
+  constructor(public chatBotService: ChatbotService,) { }
 
   conversationHistory: IConversationHistory[] = [];
   inputPrompt: string;
   inputPromptLength: number = 0;
   showShimmer = false;
+  hasChatRefreshed:boolean;
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
   @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
@@ -22,9 +23,18 @@ export class ChatWindowComponent {
   initialTextareaHeight = 0;
   initialMsgAreaHeight = 0;
 
+  ngOnInit() {
+    const chatHistory = JSON.parse(sessionStorage.getItem("chatify-chatHistory"));
+    if (chatHistory?.length > 0) {
+      this.chatBotService.showLoader=true;
+      this.conversationHistory = chatHistory;
+      this.hasChatRefreshed=true;
+    }
+  }
+
   ngAfterViewInit() {
-    this.initialTextareaHeight = this.textarea.nativeElement.clientHeight;
-    this.initialMsgAreaHeight = this.msgArea.nativeElement.clientHeight;
+    this.initialTextareaHeight = this.textarea?.nativeElement.clientHeight;
+    this.initialMsgAreaHeight = this.msgArea?.nativeElement.clientHeight;
   }
 
   getInputPrompt(event: Event) {
@@ -105,6 +115,7 @@ export class ChatWindowComponent {
         role: "user",
         parts: partsTemp
       });
+      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
       this.scrollToHumanMsg(this.conversationHistory.length - 1);
       this.callGeminiApi();
     }
@@ -123,6 +134,7 @@ export class ChatWindowComponent {
         role: "model",
         parts: partsTemp
       });
+      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
       this.scrollRobotMsg(this.conversationHistory.length - 1);
       this.showShimmer = false;
     });
