@@ -7,8 +7,8 @@ import { HeaderComponent } from './common-components/header/header.component';
 import { SideNavBarComponent } from './common-components/side-nav-bar/side-nav-bar.component';
 import { ChatBotMsgBoxComponent } from './common-components/chatbot-msg-box/chatbot-msg-box.component';
 import { HumanMsgBoxComponent } from './common-components/human-msg-box/human-msg-box.component';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +18,9 @@ import { CustomShimmerComponent } from './common-components/custom-shimmer/custo
 import { CodeBlockComponent } from './common-components/code-block/code-block.component';
 import { PlainTextComponent } from './common-components/plain-text/plain-text.component';
 import { HighlightCodePipe } from './pipes/highlight-code.pipe';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
+import { CircularSpinnerComponent } from './common-components/circular-spinner/circular-spinner.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,7 @@ import { HighlightCodePipe } from './pipes/highlight-code.pipe';
     CodeBlockComponent,
     PlainTextComponent,
     HighlightCodePipe,
+    CircularSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +47,8 @@ import { HighlightCodePipe } from './pipes/highlight-code.pipe';
     NgbModule,
     HttpClientModule,
     ShimmerModule,
+    CommonModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

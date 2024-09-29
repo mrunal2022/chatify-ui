@@ -1,4 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.css";
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
 
 body{
     margin: 0px !important;
@@ -7,3 +9,5 @@ body{
         background-color: black !important;
     }
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

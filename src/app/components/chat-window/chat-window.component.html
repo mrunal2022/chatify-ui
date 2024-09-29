@@ -1,3 +1,4 @@
+<circular-spinner *ngIf="this.chatBotService.showLoader"></circular-spinner>
 <div class="main-container">
     <div class="row m-0">
         <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible">
@@ -14,7 +15,7 @@
                         </div>
                         <div  id="robotMsgBox{{i}}">
                             <chatbot-msg-box *ngIf="element.role==='model'" class="msg-box-component"
-                                [msg]="element.parts"></chatbot-msg-box>
+                                [msg]="element.parts" [hasChatRefreshed]="hasChatRefreshed"></chatbot-msg-box>
                         </div>
                     </div>
                     <app-custom-shimmer *ngIf="showShimmer" class="msg-box-component"></app-custom-shimmer>
