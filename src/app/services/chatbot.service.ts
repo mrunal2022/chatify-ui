@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 export class ChatbotService {
   isSideNavVisible: boolean = true;
   isResProcessing:boolean;
+  showLoader=false;
 
   constructor(private httpClient: HttpClient) { }
 

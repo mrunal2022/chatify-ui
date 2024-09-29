@@ -1,0 +1,16 @@
+.circular-spinner {
+    display: flex;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f3f6;
+}
+
+:ng-deep {
+    --mdc-circular-progress-active-indicator-color: #6f5c77;
+}
