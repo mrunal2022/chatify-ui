@@ -1,6 +1,8 @@
 <div class="d-flex humanMsgBox position-relative">
     <div class="humanResponse ms-3 msg-font">
         {{msg[0].text}}
+        <br>
+        <div [id]="'humanResponse' + humanBoxIndex" class="img-holder"></div>
     </div>
     <div class="humanIcon">
         <img src="assets/humanIcon.png" class="iconPic" width="40px" height="40px">

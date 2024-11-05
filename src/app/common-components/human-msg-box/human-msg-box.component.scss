@@ -11,6 +11,14 @@
         display: flex;
         align-items: center;
         white-space: pre-wrap;
+        flex-direction: column;
+
+        .img-holder{
+            width: 100%;
+            display: flex;
+            justify-content: end;
+            margin-top: 13px;
+        }
     }
 }
 

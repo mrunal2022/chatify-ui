@@ -10,10 +10,10 @@
                 <div class="msgsArea">
                     <div *ngFor="let element of conversationHistory ; let i = index">
                         <div id="humanMsgBox{{i}}">
-                            <app-human-msg-box  *ngIf="element.role==='user'" class="msg-box-component human-msg"
-                                [msg]="element.parts"></app-human-msg-box>
+                            <app-human-msg-box *ngIf="element.role==='user'" class="msg-box-component human-msg"
+                                [msg]="element.parts" [humanBoxIndex]="i"></app-human-msg-box>
                         </div>
-                        <div  id="robotMsgBox{{i}}">
+                        <div id="robotMsgBox{{i}}">
                             <chatbot-msg-box *ngIf="element.role==='model'" class="msg-box-component"
                                 [msg]="element.parts" [hasChatRefreshed]="hasChatRefreshed"></chatbot-msg-box>
                         </div>
@@ -22,17 +22,20 @@
                 </div>
             </div>
             <div class="inputTextBox">
-                <textarea matInput 
-                          placeholder="Enter your prompt here" 
-                          (input)="autoGrow($event)" 
-                          (input)="getInputPrompt($event)" 
-                          (keydown.enter)="onEnterKey($event)"
-                          rows="1"
-                          #textarea></textarea>
-                <i class="material-icons send-icon" 
-                   *ngIf="inputPromptLength > 0 && inputPrompt.trim().length>0" 
-                   (click)="sendPromptToChatbot()">send</i>
-              </div>              
+                <div contenteditable="true" class="textarea" placeholder="Enter your prompt here"
+                    (input)="getInputPrompt($event)" (input)="autoGrow($event)" (keydown.enter)="onEnterKey($event)"
+                    rows="1" (paste)="onPaste($event)" #textarea></div>
+
+                <div class="img-upload-div"
+                    [ngClass]="{'shift-left': inputPromptLength > 0 && this.inputPrompt.prompt.trim().length > 0}">
+                    <img src="assets\image-upload.png" class="image-upload" (click)="imgInput.click()" />
+                </div>
+
+                <input type="file" (change)="uploadImg($event)" accept=".jpg, .jpeg, .png" multiple="false" #imgInput>
+
+                <i class="material-icons send-icon" *ngIf="inputPromptLength > 0 && this.inputPrompt.prompt.trim().length>0"
+                    (click)="sendPromptToChatbot()">send</i>
+            </div>
             <div class="disclaimer">
                 Chatify may display inaccurate info, including about people, so double-check its responses.
             </div>

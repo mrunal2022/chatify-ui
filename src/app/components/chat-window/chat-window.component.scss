@@ -42,25 +42,47 @@
                 display: flex;
                 justify-content: center;
 
-                textarea {
-                    width: 850px;
-                    padding: 14px 51px 14px 14px;
+                .textarea {
+                    width: 895px;
+                    padding: 14px 104px 14px 14px;
                     border: transparent;
                     background: #e9e5eb;
                     border-radius: 15px;
                     max-height: 200px !important;
+                    overflow-y: auto;
                 }
 
-                textarea:focus-visible {
+                .textarea:focus-visible {
                     outline: none;
                     border: none !important;
+                }
+
+                .img-upload-div {
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    right: 49px;
+                    cursor: pointer;
+                    transition: right 0.3s ease;
+
+                    .image-upload {
+                        width: 34px !important;
+                        height: 36px !important;    
+                    }
+                    &.shift-left {
+                        right: 117px;
+                    }
+                }
+
+                input {
+                    display: none;
                 }
 
                 .send-icon {
                     display: flex;
                     align-items: center;
                     position: relative;
-                    right: 4.0%;
+                    right: 5.5%;
                     color: #916da0;
                     font-size: 34px;
                     cursor: pointer;
