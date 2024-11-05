@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { base64Str } from 'src/app/constants/base64str.constants';
 import { IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
 
@@ -12,13 +11,17 @@ export class ChatWindowComponent {
   constructor(public chatBotService: ChatbotService,) { }
 
   conversationHistory: IConversationHistory[] = [];
-  inputPrompt: string;
+  inputPrompt: IPrompt = {
+    prompt: '',
+    imgPrompt: ''
+  };
+  textPrompt: string;
   inputPromptLength: number = 0;
   showShimmer = false;
-  hasChatRefreshed:boolean;
+  hasChatRefreshed: boolean;
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
-  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('textarea') textarea;
 
   initialTextareaHeight = 0;
   initialMsgAreaHeight = 0;
@@ -26,9 +29,9 @@ export class ChatWindowComponent {
   ngOnInit() {
     const chatHistory = JSON.parse(sessionStorage.getItem("chatify-chatHistory"));
     if (chatHistory?.length > 0) {
-      this.chatBotService.showLoader=true;
+      this.chatBotService.showLoader = true;
       this.conversationHistory = chatHistory;
-      this.hasChatRefreshed=true;
+      this.hasChatRefreshed = true;
     }
   }
 
@@ -38,8 +41,9 @@ export class ChatWindowComponent {
   }
 
   getInputPrompt(event: Event) {
-    this.inputPrompt = (event.target as HTMLInputElement).value;
-    this.inputPromptLength = this.inputPrompt.length;
+    console.log(event);
+    this.inputPrompt.prompt = (event.target as any).innerText;
+    this.inputPromptLength = this.inputPrompt.prompt?.length;
   }
 
   autoGrow(event: Event) {
@@ -59,6 +63,12 @@ export class ChatWindowComponent {
         this.msgArea.nativeElement.style.height = newMsgAreaHeight + 'px';
       }
     }
+  }
+
+  //paste only plain text
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    document.execCommand('insertText', false, event.clipboardData?.getData('text'));
   }
 
   onEnterKey(event) {
@@ -98,19 +108,19 @@ export class ChatWindowComponent {
   }
 
   clearTextArea() {
-    this.textarea.nativeElement.value = '';
+    this.textarea.nativeElement.innerHTML = '';
     this.textarea.nativeElement.style.height = 'auto';
     this.msgArea.nativeElement.style.height = this.initialMsgAreaHeight + 'px'; // Restore the original height 
     this.inputPromptLength = 0;
   }
 
   sendPromptToChatbot() {
-    if (this.inputPromptLength > 0 && this.inputPrompt.trim().length != 0) {
+    if (this.inputPromptLength > 0 && this.inputPrompt.prompt.trim().length != 0) {
       this.chatBotService.isResProcessing = true;
       this.clearTextArea();
       let partsTemp: Iparts[] = [];
-      partsTemp.push({ text: this.inputPrompt });
-      partsTemp.push({ text: base64Str });
+      partsTemp.push({ text: this.inputPrompt.prompt });
+      partsTemp.push({ text: this.inputPrompt.imgPrompt });
       this.conversationHistory.push({
         role: "user",
         parts: partsTemp
@@ -121,13 +131,35 @@ export class ChatWindowComponent {
     }
   }
 
-  callGeminiApi() {
-    let prompt: IPrompt = {
-      prompt: this.inputPrompt
+  uploadImg(event) {
+    const file = event.target.files[0];
+    console.log(event)
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.inputPrompt.imgPrompt = e.target.result;
+
+        //push img into textarea div
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '40px';
+        const editableTextBox = document.querySelector('.textarea');
+        editableTextBox?.appendChild(img);
+      };
+      reader.readAsDataURL(file);
     }
-    this.inputPrompt = '';
+
+  }
+
+  callGeminiApi() {
     this.showShimmer = true;
-    this.chatBotService.getResponseFromGemini(prompt).subscribe((res) => {
+    let formattedInputprompt={
+      prompt:this.inputPrompt.prompt,
+      imgPrompt:this.inputPrompt.imgPrompt.split(',')[1]
+    }
+    this.chatBotService.getResponseFromGemini(formattedInputprompt).subscribe((res) => {
+      this.inputPrompt.prompt = '';
+      this.inputPrompt.imgPrompt = null;
       let partsTemp: Iparts[] = [];
       partsTemp.push({ text: res.text });
       this.conversationHistory.push({
