@@ -41,7 +41,6 @@ export class ChatWindowComponent {
   }
 
   getInputPrompt(event: Event) {
-    console.log(event);
     this.inputPrompt.prompt = (event.target as any).innerText;
     this.inputPromptLength = this.inputPrompt.prompt?.length;
   }
@@ -155,7 +154,7 @@ export class ChatWindowComponent {
     this.showShimmer = true;
     let formattedInputprompt={
       prompt:this.inputPrompt.prompt,
-      imgPrompt:this.inputPrompt.imgPrompt.split(',')[1]
+      imgPrompt:this.inputPrompt.imgPrompt?.split(',')[1]
     }
     this.chatBotService.getResponseFromGemini(formattedInputprompt).subscribe((res) => {
       this.inputPrompt.prompt = '';
