@@ -278,3 +278,45 @@ export const conversationHistory=[
       "role": "model"
     }
   ];
+
+export const ChatHistoryList = [
+  {
+    title: "what is openAI?"
+  },
+  {
+    title: "greeting msg"
+  },
+   {
+    title: "difference between directive and pipe"
+  }, 
+  {
+    title: "angularlife cycle hooks"
+  }, 
+  {
+    title: "good laptop 32gb"
+  }, 
+  {
+    title: "vs code preety extensions"
+  }, 
+  {
+    title: "ind vs aus"
+  }, 
+  {
+    title: "virat kohli bday"
+  },
+  {
+    title: "difference between directive and pipe"
+  }, 
+  {
+    title: "difference between directive and pipe"
+  }, 
+  {
+    title: "angularlife cycle hooks"
+  }, 
+  {
+    title: "good laptop 32gb"
+  }, 
+  {
+    title: "vs code preety extensions"
+  }, 
+]
