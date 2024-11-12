@@ -1,7 +1,7 @@
 <circular-spinner *ngIf="this.chatBotService.showLoader"></circular-spinner>
 <div class="main-container">
     <div class="row m-0">
-        <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible">
+        <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible" >
             <app-side-nav-bar></app-side-nav-bar>
         </div>
         <div class="p-0 rightSection" [ngClass]="this.chatBotService.isSideNavVisible?'col-10' : 'col-12'">
