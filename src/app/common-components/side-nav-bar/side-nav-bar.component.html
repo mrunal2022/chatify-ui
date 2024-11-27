@@ -14,7 +14,7 @@
             Recent
         </div>
         <div class="chat-history-list">
-            <div *ngFor="let item of this.chatHistoryList" class="chat-item text-font mb-3" title="{{item.title}}">
+            <div *ngFor="let item of this.chatHistoryList" class="chat-item text-font " title="{{item.title}}" (click)="clickChatItem(item)">
                 <img src="assets/chat-bubble.png" class="chat-bubble-icon me-2" width="19px">
                 {{item.title}}
             </div>
