@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
 
@@ -8,7 +9,9 @@ import { ChatbotService } from 'src/app/services/chatbot.service';
   styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent {
-  constructor(public chatBotService: ChatbotService,) { }
+  constructor(public chatBotService: ChatbotService,
+    private route: ActivatedRoute
+  ) { }
 
   conversationHistory: IConversationHistory[] = [];
   inputPrompt: IPrompt = {
@@ -19,6 +22,7 @@ export class ChatWindowComponent {
   inputPromptLength: number = 0;
   showShimmer = false;
   hasChatRefreshed: boolean;
+  chatId: string;
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
   @ViewChild('textarea') textarea;
@@ -27,12 +31,21 @@ export class ChatWindowComponent {
   initialMsgAreaHeight = 0;
 
   ngOnInit() {
+
     const chatHistory = JSON.parse(sessionStorage.getItem("chatify-chatHistory"));
     if (chatHistory?.length > 0) {
       this.chatBotService.showLoader = true;
       this.conversationHistory = chatHistory;
       this.hasChatRefreshed = true;
     }
+    this.route.paramMap.subscribe(params => {
+      this.chatId = params.get('id');
+      if (this.chatId) {
+        this.chatBotService.getChatById(this.chatId).subscribe((res) => {
+          this.conversationHistory = res["messages"];
+        })
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -132,7 +145,6 @@ export class ChatWindowComponent {
 
   uploadImg(event) {
     const file = event.target.files[0];
-    console.log(event)
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -152,9 +164,10 @@ export class ChatWindowComponent {
 
   callGeminiApi() {
     this.showShimmer = true;
-    let formattedInputprompt={
-      prompt:this.inputPrompt.prompt,
-      imgPrompt:this.inputPrompt.imgPrompt?.split(',')[1]
+    let formattedInputprompt = {
+      chatId: this.chatId,
+      prompt: this.inputPrompt.prompt,
+      imgPrompt: this.inputPrompt.imgPrompt?.split(',')[1]
     }
     this.chatBotService.getResponseFromGemini(formattedInputprompt).subscribe((res) => {
       this.inputPrompt.prompt = '';
