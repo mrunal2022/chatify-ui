@@ -2,13 +2,13 @@
 <div class="main-container">
     <div class="row m-0">
         <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible" >
-            <app-side-nav-bar></app-side-nav-bar>
+            <app-side-nav-bar [chatHistoryList]="chatHistoryList" [conversationHistory]="conversationHistory"></app-side-nav-bar>
         </div>
         <div class="p-0 rightSection" [ngClass]="this.chatBotService.isSideNavVisible?'col-10' : 'col-12'">
             <app-header></app-header>
             <div class="msg-area-component" #msgArea>
                 <div class="msgsArea">
-                    <div *ngFor="let element of conversationHistory ; let i = index">
+                            <div *ngFor="let element of conversationHistory ; let i = index">
                         <div id="humanMsgBox{{i}}">
                             <app-human-msg-box *ngIf="element.role==='user'" class="msg-box-component human-msg"
                                 [msg]="element.parts" [humanBoxIndex]="i"></app-human-msg-box>

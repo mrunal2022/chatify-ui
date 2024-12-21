@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
+import { ChatHistoryList, IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class ChatWindowComponent {
   showShimmer = false;
   hasChatRefreshed: boolean;
   chatId: string;
+  chatHistoryList: ChatHistoryList[];
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
   @ViewChild('textarea') textarea;
@@ -31,20 +32,28 @@ export class ChatWindowComponent {
   initialMsgAreaHeight = 0;
 
   ngOnInit() {
-
-    const chatHistory = JSON.parse(sessionStorage.getItem("chatify-chatHistory"));
-    if (chatHistory?.length > 0) {
-      this.chatBotService.showLoader = true;
-      this.conversationHistory = chatHistory;
-      this.hasChatRefreshed = true;
-    }
+    this.getChatHistoryList();
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
       if (this.chatId) {
         this.chatBotService.getChatById(this.chatId).subscribe((res) => {
-          this.conversationHistory = res["messages"];
+          this.chatBotService.showLoader = true;
+          if (res) {
+            this.conversationHistory = res["messages"];
+            this.hasChatRefreshed=true;
+          }
+          else{
+            this.conversationHistory=[];
+          }
+          this.chatBotService.showLoader = false;
         })
       }
+    });
+  }
+
+  getChatHistoryList() {
+    this.chatBotService.getChatHistoryList().subscribe((res) => {
+      this.chatHistoryList = res;
     });
   }
 
@@ -137,7 +146,6 @@ export class ChatWindowComponent {
         role: "user",
         parts: partsTemp
       });
-      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
       this.scrollToHumanMsg(this.conversationHistory.length - 1);
       this.callGeminiApi();
     }
@@ -178,7 +186,6 @@ export class ChatWindowComponent {
         role: "model",
         parts: partsTemp
       });
-      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
       this.scrollRobotMsg(this.conversationHistory.length - 1);
       this.showShimmer = false;
     });

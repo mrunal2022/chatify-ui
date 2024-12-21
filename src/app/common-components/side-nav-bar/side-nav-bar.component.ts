@@ -11,21 +11,17 @@ import * as uuid from 'uuid';
 })
 export class SideNavBarComponent {
   constructor(public chatBotService: ChatbotService, public router: Router) { }
-  chatHistoryList: ChatHistoryList[];
-  @Input() chatById: IConversationHistory[];
+  @Input() chatHistoryList: ChatHistoryList[];
+  @Input() conversationHistory:IConversationHistory[];
 
-  ngOnInit() {
-    this.chatBotService.getChatHistoryList().subscribe((res) => {
-      this.chatHistoryList = res;
 
-    });
-  }
 
   toogleSidebar() {
     this.chatBotService.isSideNavVisible = !this.chatBotService.isSideNavVisible;
   }
 
   newChat() {
+    this.conversationHistory=[];
     const generatedUuid = uuid.v4();
     this.router.navigate(['/chat-session', generatedUuid]);
   }

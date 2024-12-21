@@ -71,6 +71,12 @@
     }
 }
 
+.disable-cls{
+    background-color: #c2bbc5 !important;
+    color: grey !important;
+    cursor:default !important;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 10px;

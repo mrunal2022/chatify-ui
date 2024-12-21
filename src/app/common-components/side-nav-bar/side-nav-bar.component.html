@@ -3,8 +3,8 @@
         <img src="assets\dog.png" class="iconPic" height="40px" width="40px" (click)="toogleSidebar()">
     </div>
 
-    <div class="new-chat">
-        <div class="new-chat-btn text-font" (click)="newChat()">
+    <div class="new-chat" >
+        <div class="new-chat-btn text-font" (click)="this.conversationHistory?.length>0 ? newChat(): null" [ngClass]="this.conversationHistory?.length===0 ? 'disable-cls' : null">
             <span class="material-symbols-outlined">add</span>
             New Chat
         </div>
