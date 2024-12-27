@@ -14,8 +14,6 @@ export class SideNavBarComponent {
   @Input() chatHistoryList: ChatHistoryList[];
   @Input() conversationHistory:IConversationHistory[];
 
-
-
   toogleSidebar() {
     this.chatBotService.isSideNavVisible = !this.chatBotService.isSideNavVisible;
   }
@@ -29,6 +27,4 @@ export class SideNavBarComponent {
   clickChatItem(chatItem) {
     this.router.navigate(['/chat-session', chatItem.chatId]);
   }
-
- 
 }
