@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IPrompt } from '../constants/chatbot.model';
+import { IConversationHistory, IPrompt } from '../constants/chatbot.model';
 import { environment } from '../environments/environment';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class ChatbotService {
   isSideNavVisible: boolean = true;
   isResProcessing: boolean;
   showLoader = false;
+  conversationHistory: BehaviorSubject<IConversationHistory[]> =new BehaviorSubject<IConversationHistory[]>([]);
 
   constructor(private httpClient: HttpClient) { }
 

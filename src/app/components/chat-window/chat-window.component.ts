@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChatHistoryList, IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
-
+import * as uuid from 'uuid';
 @Component({
   selector: 'app-chat-window',
   templateUrl: './chat-window.component.html',
@@ -10,7 +10,8 @@ import { ChatbotService } from 'src/app/services/chatbot.service';
 })
 export class ChatWindowComponent {
   constructor(public chatBotService: ChatbotService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public router: Router
   ) { }
 
   conversationHistory: IConversationHistory[] = [];
@@ -23,6 +24,7 @@ export class ChatWindowComponent {
   showShimmer = false;
   hasChatRefreshed: boolean;
   chatId: string;
+  chatHistoryList: ChatHistoryList[];
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
   @ViewChild('textarea') textarea;
@@ -31,20 +33,35 @@ export class ChatWindowComponent {
   initialMsgAreaHeight = 0;
 
   ngOnInit() {
-
-    const chatHistory = JSON.parse(sessionStorage.getItem("chatify-chatHistory"));
-    if (chatHistory?.length > 0) {
-      this.chatBotService.showLoader = true;
-      this.conversationHistory = chatHistory;
-      this.hasChatRefreshed = true;
-    }
+    console.log(this.conversationHistory, "ngoninit")
+    this.getChatHistoryList();
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
-      if (this.chatId) {
-        this.chatBotService.getChatById(this.chatId).subscribe((res) => {
-          this.conversationHistory = res["messages"];
-        })
-      }
+    });
+    if (this.chatId) {
+      this.getChatById();
+    }
+  }
+
+  getChatById() {
+    this.chatBotService.getChatById(this.chatId).subscribe((res) => {
+      this.hasChatRefreshed = true;
+      this.chatBotService.showLoader = true;
+      this.chatBotService.conversationHistory.subscribe((history) => {
+        if (res) {
+          this.conversationHistory = history.length > 0 ? [...history] : [...res["messages"]];
+        } else {
+          this.conversationHistory = history.length > 0 ? [...history] : [];
+          this.chatBotService.showLoader = false;
+        }
+      });
+      this.chatBotService.showLoader = false;
+    });
+  }
+
+  getChatHistoryList() {
+    this.chatBotService.getChatHistoryList().subscribe((res) => {
+      this.chatHistoryList = res;
     });
   }
 
@@ -137,7 +154,7 @@ export class ChatWindowComponent {
         role: "user",
         parts: partsTemp
       });
-      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
+      this.chatBotService.conversationHistory.next(this.conversationHistory);
       this.scrollToHumanMsg(this.conversationHistory.length - 1);
       this.callGeminiApi();
     }
@@ -159,11 +176,14 @@ export class ChatWindowComponent {
       };
       reader.readAsDataURL(file);
     }
-
   }
 
   callGeminiApi() {
     this.showShimmer = true;
+    if (!this.chatId) {
+      this.chatId = uuid.v4();
+      this.router.navigate(['/chat-session', this.chatId]);
+    }
     let formattedInputprompt = {
       chatId: this.chatId,
       prompt: this.inputPrompt.prompt,
@@ -174,11 +194,12 @@ export class ChatWindowComponent {
       this.inputPrompt.imgPrompt = null;
       let partsTemp: Iparts[] = [];
       partsTemp.push({ text: res.text });
+      this.hasChatRefreshed = false;
       this.conversationHistory.push({
         role: "model",
         parts: partsTemp
       });
-      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
+      this.chatBotService.conversationHistory.next(this.conversationHistory);
       this.scrollRobotMsg(this.conversationHistory.length - 1);
       this.showShimmer = false;
     });

@@ -1,13 +1,14 @@
 <circular-spinner *ngIf="this.chatBotService.showLoader"></circular-spinner>
 <div class="main-container">
     <div class="row m-0">
-        <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible" >
-            <app-side-nav-bar></app-side-nav-bar>
+        <div class="col-2 p-0 navBar" *ngIf="this.chatBotService.isSideNavVisible">
+            <app-side-nav-bar [chatHistoryList]="chatHistoryList"
+                [conversationHistory]="conversationHistory"></app-side-nav-bar>
         </div>
         <div class="p-0 rightSection" [ngClass]="this.chatBotService.isSideNavVisible?'col-10' : 'col-12'">
             <app-header></app-header>
             <div class="msg-area-component" #msgArea>
-                <div class="msgsArea">
+                <div class="msgsArea" *ngIf="conversationHistory?.length>0; else welcomeTemplate">
                     <div *ngFor="let element of conversationHistory ; let i = index">
                         <div id="humanMsgBox{{i}}">
                             <app-human-msg-box *ngIf="element.role==='user'" class="msg-box-component human-msg"
@@ -21,6 +22,9 @@
                     <app-custom-shimmer *ngIf="showShimmer" class="msg-box-component"></app-custom-shimmer>
                 </div>
             </div>
+            <ng-template #welcomeTemplate>
+                <welcome-template></welcome-template>
+            </ng-template>
             <div class="inputTextBox">
                 <div contenteditable="true" class="textarea" placeholder="Enter your prompt here"
                     (input)="getInputPrompt($event)" (input)="autoGrow($event)" (keydown.enter)="onEnterKey($event)"
@@ -33,11 +37,20 @@
 
                 <input type="file" (change)="uploadImg($event)" accept=".jpg, .jpeg, .png" multiple="false" #imgInput>
 
-                <i class="material-icons send-icon" *ngIf="inputPromptLength > 0 && this.inputPrompt.prompt.trim().length>0"
+                <i class="material-icons send-icon"
+                    *ngIf="inputPromptLength > 0 && this.inputPrompt.prompt.trim().length>0"
                     (click)="sendPromptToChatbot()">send</i>
             </div>
-            <div class="disclaimer">
-                Chatify may display inaccurate info, including about people, so double-check its responses.
+            <div class="d-flex justify-content-center">
+                <div class="disclaimer">
+                    Chatify may display inaccurate info, including about people, so double-check its responses.
+                </div>
+                <div class="poweredBy text-font">
+                    Powered by Gemini
+                    <span style="margin-left: -3px;">
+                        <img src="assets\geminiLogo.jpg" class="image-upload" (click)="imgInput.click()" />
+                    </span>
+                </div>
             </div>
         </div>
     </div>

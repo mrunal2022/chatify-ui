@@ -68,8 +68,9 @@
 
                     .image-upload {
                         width: 34px !important;
-                        height: 36px !important;    
+                        height: 36px !important;
                     }
+
                     &.shift-left {
                         right: 117px;
                     }
@@ -99,6 +100,26 @@
                 letter-spacing: 17.015rem;
                 letter-spacing: 0.01rem;
             }
+
+            .poweredBy {
+                position: absolute;
+                right: 0;
+
+                img {
+                    width: 67px;
+                    margin-top: -5px;
+                    margin-right: 23px;
+                }
+            }
         }
     }
+}
+
+.text-font{
+    font-size: 1.09rem;
+    line-height: 1.5rem;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.003rem;
 }

@@ -21,6 +21,7 @@ import { HighlightCodePipe } from './pipes/highlight-code.pipe';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CircularSpinnerComponent } from './common-components/circular-spinner/circular-spinner.component';
+import { WelcomeTemplateComponent } from './common-components/welcome-template/welcome-template.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { CircularSpinnerComponent } from './common-components/circular-spinner/c
     PlainTextComponent,
     HighlightCodePipe,
     CircularSpinnerComponent,
+    WelcomeTemplateComponent,
   ],
   imports: [
     BrowserModule,
