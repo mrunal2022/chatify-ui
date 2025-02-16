@@ -1,14 +1,18 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ChatHistoryList, IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
-
+import * as uuid from 'uuid';
 @Component({
   selector: 'app-chat-window',
   templateUrl: './chat-window.component.html',
   styleUrls: ['./chat-window.component.scss']
 })
 export class ChatWindowComponent {
-  constructor(public chatBotService: ChatbotService,) { }
+  constructor(public chatBotService: ChatbotService,
+    private route: ActivatedRoute,
+    public router: Router
+  ) { }
 
   conversationHistory: IConversationHistory[] = [];
   inputPrompt: IPrompt = {
@@ -19,6 +23,8 @@ export class ChatWindowComponent {
   inputPromptLength: number = 0;
   showShimmer = false;
   hasChatRefreshed: boolean;
+  chatId: string;
+  chatHistoryList: ChatHistoryList[];
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
   @ViewChild('textarea') textarea;
@@ -27,12 +33,36 @@ export class ChatWindowComponent {
   initialMsgAreaHeight = 0;
 
   ngOnInit() {
-    const chatHistory = JSON.parse(sessionStorage.getItem("chatify-chatHistory"));
-    if (chatHistory?.length > 0) {
-      this.chatBotService.showLoader = true;
-      this.conversationHistory = chatHistory;
-      this.hasChatRefreshed = true;
+    console.log(this.conversationHistory, "ngoninit")
+    this.getChatHistoryList();
+    this.route.paramMap.subscribe(params => {
+      this.chatId = params.get('id');
+    });
+    if (this.chatId) {
+      this.getChatById();
     }
+  }
+
+  getChatById() {
+    this.chatBotService.getChatById(this.chatId).subscribe((res) => {
+      this.hasChatRefreshed = true;
+      this.chatBotService.showLoader = true;
+      this.chatBotService.conversationHistory.subscribe((history) => {
+        if (res) {
+          this.conversationHistory = history.length > 0 ? [...history] : [...res["messages"]];
+        } else {
+          this.conversationHistory = history.length > 0 ? [...history] : [];
+          this.chatBotService.showLoader = false;
+        }
+      });
+      this.chatBotService.showLoader = false;
+    });
+  }
+
+  getChatHistoryList() {
+    this.chatBotService.getChatHistoryList().subscribe((res) => {
+      this.chatHistoryList = res;
+    });
   }
 
   ngAfterViewInit() {
@@ -41,7 +71,6 @@ export class ChatWindowComponent {
   }
 
   getInputPrompt(event: Event) {
-    console.log(event);
     this.inputPrompt.prompt = (event.target as any).innerText;
     this.inputPromptLength = this.inputPrompt.prompt?.length;
   }
@@ -125,7 +154,7 @@ export class ChatWindowComponent {
         role: "user",
         parts: partsTemp
       });
-      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
+      this.chatBotService.conversationHistory.next(this.conversationHistory);
       this.scrollToHumanMsg(this.conversationHistory.length - 1);
       this.callGeminiApi();
     }
@@ -133,7 +162,6 @@ export class ChatWindowComponent {
 
   uploadImg(event) {
     const file = event.target.files[0];
-    console.log(event)
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -148,25 +176,30 @@ export class ChatWindowComponent {
       };
       reader.readAsDataURL(file);
     }
-
   }
 
   callGeminiApi() {
     this.showShimmer = true;
-    let formattedInputprompt={
-      prompt:this.inputPrompt.prompt,
-      imgPrompt:this.inputPrompt.imgPrompt.split(',')[1]
+    if (!this.chatId) {
+      this.chatId = uuid.v4();
+      this.router.navigate(['/chat-session', this.chatId]);
+    }
+    let formattedInputprompt = {
+      chatId: this.chatId,
+      prompt: this.inputPrompt.prompt,
+      imgPrompt: this.inputPrompt.imgPrompt?.split(',')[1]
     }
     this.chatBotService.getResponseFromGemini(formattedInputprompt).subscribe((res) => {
       this.inputPrompt.prompt = '';
       this.inputPrompt.imgPrompt = null;
       let partsTemp: Iparts[] = [];
       partsTemp.push({ text: res.text });
+      this.hasChatRefreshed = false;
       this.conversationHistory.push({
         role: "model",
         parts: partsTemp
       });
-      sessionStorage.setItem("chatify-chatHistory", JSON.stringify(this.conversationHistory));
+      this.chatBotService.conversationHistory.next(this.conversationHistory);
       this.scrollRobotMsg(this.conversationHistory.length - 1);
       this.showShimmer = false;
     });

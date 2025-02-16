@@ -10,7 +10,7 @@ export class HumanMsgBoxComponent {
   @Input() humanBoxIndex: number;
 
   ngOnChanges() {
-    const base64String = this.msg[1].text;
+    const base64String = this.msg[1]?.text;
 
     if (base64String) {
 

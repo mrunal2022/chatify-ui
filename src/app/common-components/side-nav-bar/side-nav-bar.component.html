@@ -1,5 +1,23 @@
-<div class="wrapper">
-    <div placement="right" ngbTooltip="Close sidebar" triggers="mouseenter:mouseleave">
+<div class="main-container">
+    <div class="wrapper" placement="right" ngbTooltip="Close sidebar" triggers="mouseenter:mouseleave">
         <img src="assets\dog.png" class="iconPic" height="40px" width="40px" (click)="toogleSidebar()">
+    </div>
+
+    <div class="new-chat" >
+        <div class="new-chat-btn text-font" (click)="this.conversationHistory?.length>0 ? newChat(): null" [ngClass]="this.conversationHistory?.length===0 ? 'disable-cls' : null">
+            <span class="material-symbols-outlined">add</span>
+            New Chat
+        </div>
+    </div>
+    <div class="chat-history-box">
+        <div class="text-font mb-3">
+            Recent
+        </div>
+        <div class="chat-history-list">
+            <div *ngFor="let item of this.chatHistoryList" class="chat-item text-font " title="{{item.title}}" (click)="clickChatItem(item)">
+                <img src="assets/chat-bubble.png" class="chat-bubble-icon me-2" width="19px">
+                {{item.title}}
+            </div>
+        </div>
     </div>
 </div>

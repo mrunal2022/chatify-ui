@@ -151,3 +151,4 @@
 //   return sections;
 // }
 
+// <!-- [ngClass]="this.conversationHistory?.length===0 ? 'disable-cls' : null" -->
