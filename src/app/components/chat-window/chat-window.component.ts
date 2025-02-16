@@ -37,10 +37,8 @@ export class ChatWindowComponent {
     this.getChatHistoryList();
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
-    });
-    if (this.chatId) {
       this.getChatById();
-    }
+    });
   }
 
   getChatById() {
