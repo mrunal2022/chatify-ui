@@ -19,7 +19,7 @@ export class SideNavBarComponent {
   }
 
   newChat() {
-    this.conversationHistory=[];
+    this.chatBotService.conversationHistory.next([]);
     const generatedUuid = uuid.v4();
     this.router.navigate(['/chat-session', generatedUuid]);
   }
