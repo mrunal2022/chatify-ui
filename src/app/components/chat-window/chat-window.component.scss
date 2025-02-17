@@ -104,6 +104,7 @@
             .poweredBy {
                 position: absolute;
                 right: 0;
+                font-size: 1vw; // Decreases font size based on the viewport width
 
                 img {
                     width: 67px;

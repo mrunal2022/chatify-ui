@@ -3,21 +3,30 @@
         <img src="assets\dog.png" class="iconPic" height="40px" width="40px" (click)="toogleSidebar()">
     </div>
 
-    <div class="new-chat" >
-        <div class="new-chat-btn text-font" (click)="this.conversationHistory?.length>0 ? newChat(): null" [ngClass]="this.conversationHistory?.length===0 ? 'disable-cls' : null">
+    <div class="new-chat">
+        <div class="new-chat-btn text-font" (click)="this.conversationHistory?.length>0 ? newChat(): null"
+            [ngClass]="this.conversationHistory?.length===0 ? 'disable-cls' : null">
             <span class="material-symbols-outlined">add</span>
             New Chat
         </div>
     </div>
     <div class="chat-history-box">
-        <div class="text-font mb-3">
+        <div class="text-font mb-3 ms-2">
             Recent
         </div>
         <div class="chat-history-list">
-            <div *ngFor="let item of this.chatHistoryList" class="chat-item text-font " title="{{item.title}}" (click)="clickChatItem(item)">
+            <div *ngFor="let item of this.chatHistoryList" class="chat-item text-font " title="{{item.title}}"
+                (click)="clickChatItem(item)">
                 <img src="assets/chat-bubble.png" class="chat-bubble-icon me-2" width="19px">
                 {{item.title}}
             </div>
         </div>
     </div>
+    <div class="gemini text-font">
+        <a href="https://deepmind.google/technologies/gemini/" target="_blank" class="gemini-link">
+            <img src="assets/gemini-logo-no-bg.png" width="50px" class="me-2">
+            About Gemini
+        </a>
+    </div>
+
 </div>
