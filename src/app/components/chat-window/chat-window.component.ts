@@ -25,6 +25,7 @@ export class ChatWindowComponent {
   hasChatRefreshed: boolean;
   chatId: string;
   chatHistoryList: ChatHistoryList[];
+  navBarLoader = false;
 
   @ViewChild('msgArea') msgArea: ElementRef<HTMLDivElement>;
   @ViewChild('textarea') textarea;
@@ -52,15 +53,26 @@ export class ChatWindowComponent {
           this.conversationHistory = history.length > 0 ? [...history] : [];
           this.chatBotService.showLoader = false;
         }
-      });
+      },
+        (error) => {
+          this.navBarLoader = false;
+          console.log("something went wrong", error);
+        });
       this.chatBotService.showLoader = false;
     });
   }
 
   getChatHistoryList() {
+    this.navBarLoader = true;
     this.chatBotService.getChatHistoryList().subscribe((res) => {
       this.chatHistoryList = res;
-    });
+      this.navBarLoader = false;
+    },
+      (error) => {
+        this.navBarLoader = false;
+        console.log("something went wrong", error);
+      }
+    );
   }
 
   ngAfterViewInit() {

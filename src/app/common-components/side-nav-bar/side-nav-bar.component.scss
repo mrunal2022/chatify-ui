@@ -17,6 +17,7 @@
 
     .new-chat {
         height: 10%;
+
         .new-chat-btn {
             width: 142px;
             height: 41px;
@@ -46,9 +47,10 @@
 
     .chat-history-box {
         margin-top: 30px;
-        margin-left: 31px;
+        margin-left: 13px;
         overflow-y: auto;
-        height: 50%;
+        flex-shrink: 0; // Prevent shrinking
+        height: 50%; // Always takes 50% of the container height
 
         .chat-history-list {
             margin-left: 6px;
@@ -63,18 +65,33 @@
                 cursor: pointer;
 
                 &:hover {
-                    background-color:#bcb3c1;
+                    background-color: #bcb3c1;
                     border-radius: 4px;
                 }
             }
         }
     }
+
+    .gemini {
+        height: 7.5%;
+        margin-top: auto; 
+        padding-left: 22px;
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+        font-weight: 400;
+        .gemini-link {
+            text-decoration: none;
+            color: inherit;
+            display: inline-block; 
+        }        
+    }
 }
 
-.disable-cls{
+.disable-cls {
     background-color: #c2bbc5 !important;
     color: grey !important;
-    cursor:default !important;
+    cursor: default !important;
 }
 
 ::-webkit-scrollbar {
