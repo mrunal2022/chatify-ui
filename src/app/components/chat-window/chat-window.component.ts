@@ -34,7 +34,6 @@ export class ChatWindowComponent {
   initialMsgAreaHeight = 0;
 
   ngOnInit() {
-    console.log(this.conversationHistory, "ngoninit")
     this.getChatHistoryList();
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
@@ -43,21 +42,26 @@ export class ChatWindowComponent {
   }
 
   getChatById() {
+    this.chatBotService.showLoader = true;
     this.chatBotService.getChatById(this.chatId).subscribe((res) => {
       this.hasChatRefreshed = true;
-      this.chatBotService.showLoader = true;
-      this.chatBotService.conversationHistory.subscribe((history) => {
-        if (res) {
-          this.conversationHistory = history.length > 0 ? [...history] : [...res["messages"]];
-        } else {
-          this.conversationHistory = history.length > 0 ? [...history] : [];
-          this.chatBotService.showLoader = false;
-        }
-      },
-        (error) => {
-          this.navBarLoader = false;
-          console.log("something went wrong", error);
-        });
+      if (res) {
+        this.conversationHistory = [...res["messages"]];
+      }
+      this.chatBotService.showLoader = false;
+    });
+    this.getConversationHistory();
+  }
+
+  getConversationHistory(){
+    this.chatBotService.conversationHistory.subscribe((history) => {
+      if (history) {
+        this.conversationHistory = history?.length > 0 ? [...history] : [];
+        this.chatBotService.showLoader = false;
+      }
+    }, (error) => {
+      this.navBarLoader = false;
+      console.log("something went wrong", error);
       this.chatBotService.showLoader = false;
     });
   }

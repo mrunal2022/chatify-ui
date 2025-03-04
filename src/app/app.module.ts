@@ -22,7 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { CircularSpinnerComponent } from './common-components/circular-spinner/circular-spinner.component';
 import { WelcomeTemplateComponent } from './common-components/welcome-template/welcome-template.component';
-
+import { LoginComponent } from './common-components/login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +37,7 @@ import { WelcomeTemplateComponent } from './common-components/welcome-template/w
     HighlightCodePipe,
     CircularSpinnerComponent,
     WelcomeTemplateComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,7 +51,7 @@ import { WelcomeTemplateComponent } from './common-components/welcome-template/w
     HttpClientModule,
     ShimmerModule,
     CommonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
