@@ -11,7 +11,7 @@ export class ChatbotService {
   isSideNavVisible: boolean = true;
   isResProcessing: boolean;
   showLoader = false;
-  conversationHistory: BehaviorSubject<IConversationHistory[]> =new BehaviorSubject<IConversationHistory[]>([]);
+  conversationHistory: BehaviorSubject<IConversationHistory[]> =new BehaviorSubject<IConversationHistory[]>(null);
 
   constructor(private httpClient: HttpClient) { }
 
