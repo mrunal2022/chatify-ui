@@ -1,0 +1,30 @@
+.main-container {
+    height: 100vh;
+    background-color: #f5f3f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .wrapper {
+        background-color: #e9e5eb;
+        height: 320px;
+        width: 350px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+        padding-bottom: 60px;
+
+        .sign-in {
+            font-family: Arial, sans-serif;
+            font-size: 32px;
+            color:#835c83
+        }
+
+        .button {
+            width: fit-content;
+        }
+    }
+}
