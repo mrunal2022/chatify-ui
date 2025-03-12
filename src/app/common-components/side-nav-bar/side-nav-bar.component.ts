@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatHistoryList, IConversationHistory } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
@@ -7,10 +7,10 @@ import * as uuid from 'uuid';
 @Component({
   selector: 'app-side-nav-bar',
   templateUrl: './side-nav-bar.component.html',
-  styleUrls: ['./side-nav-bar.component.scss']
+  styleUrls: ['./side-nav-bar.component.scss'],
 })
 export class SideNavBarComponent {
-  constructor(public chatBotService: ChatbotService, public router: Router) { }
+  constructor(public chatBotService: ChatbotService, public router: Router, public cdr:ChangeDetectorRef) { }
   @Input() chatHistoryList: ChatHistoryList[];
   @Input() conversationHistory:IConversationHistory[];
 

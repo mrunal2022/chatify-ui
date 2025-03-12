@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IConversationHistory, IPrompt } from '../constants/chatbot.model';
+import { ChatHistoryList, IConversationHistory, IPrompt } from '../constants/chatbot.model';
 import { environment } from '../environments/environment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class ChatbotService {
     );
   }
 
-  getChatHistoryList() {
+  getChatHistoryList(): Observable<ChatHistoryList[]> {
     return this.httpClient.get<any>(
       `${environment.apiBasePath}/getChatHistoryList`
     );
