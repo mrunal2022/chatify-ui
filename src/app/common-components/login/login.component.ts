@@ -8,6 +8,7 @@ declare const google: any;
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements AfterViewInit {
+  loader=false;
 
   constructor(private renderer: Renderer2) {}
 
@@ -19,6 +20,7 @@ export class LoginComponent implements AfterViewInit {
         client_id: this.clientId,
         callback: async (response: any) => {
           try {
+            this.loader=true;
             const res = await fetch(`${environment.apiBasePath}/sign-up`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -30,8 +32,10 @@ export class LoginComponent implements AfterViewInit {
             if(data.token){
               window.location.href = "/#/chat-session";
             }
+            this.loader=false;
           } catch (error) {
             console.error("Login Error:", error);
+            this.loader=false;
           }
         },
         auto_select: false,
