@@ -11,9 +11,8 @@ import * as uuid from 'uuid';
 export class ChatWindowComponent {
   constructor(public chatBotService: ChatbotService,
     private route: ActivatedRoute,
-    public router: Router
+    public router: Router,
   ) { }
-
   conversationHistory: IConversationHistory[] = [];
   inputPrompt: IPrompt = {
     prompt: '',
@@ -37,6 +36,10 @@ export class ChatWindowComponent {
     this.getChatHistoryList();
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
+      if (!this.chatId) {
+        this.chatId = uuid.v4();
+        this.router.navigate(['/chat-session', this.chatId], { replaceUrl: true });
+      }
       this.getChatById();
     });
   }
@@ -53,7 +56,7 @@ export class ChatWindowComponent {
     this.getConversationHistory();
   }
 
-  getConversationHistory(){
+  getConversationHistory() {
     this.chatBotService.conversationHistory.subscribe((history) => {
       if (history) {
         this.conversationHistory = history?.length > 0 ? [...history] : [];
@@ -68,15 +71,19 @@ export class ChatWindowComponent {
 
   getChatHistoryList() {
     this.navBarLoader = true;
-    this.chatBotService.getChatHistoryList().subscribe((res) => {
-      this.chatHistoryList = res;
-      this.navBarLoader = false;
-    },
-      (error) => {
+
+    this.chatBotService.getChatHistoryList().subscribe({
+      next: (res) => {
+        if (res) {
+          this.chatHistoryList = [...res];
+        }
         this.navBarLoader = false;
-        console.log("something went wrong", error);
+      },
+      error: (error) => {
+        this.navBarLoader = false;
+        this.chatBotService.showLoader = false;
       }
-    );
+    });
   }
 
   ngAfterViewInit() {
@@ -194,10 +201,6 @@ export class ChatWindowComponent {
 
   callGeminiApi() {
     this.showShimmer = true;
-    if (!this.chatId) {
-      this.chatId = uuid.v4();
-      this.router.navigate(['/chat-session', this.chatId]);
-    }
     let formattedInputprompt = {
       chatId: this.chatId,
       prompt: this.inputPrompt.prompt,
@@ -215,6 +218,9 @@ export class ChatWindowComponent {
       });
       this.chatBotService.conversationHistory.next(this.conversationHistory);
       this.scrollRobotMsg(this.conversationHistory.length - 1);
+      if (this.conversationHistory.length <= 2) {
+        this.getChatHistoryList();
+      }
       this.showShimmer = false;
     });
   }
