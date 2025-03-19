@@ -36,7 +36,8 @@ export class HumanMsgBoxComponent {
   // to convert base64 to Blob
   base64ToBlob(base64: string, contentType: string) {
 
-    const byteCharacters = atob(base64.split(',')[1]);
+    const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
+    const byteCharacters = atob(base64Data);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);

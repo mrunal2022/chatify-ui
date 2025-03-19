@@ -60,7 +60,6 @@ export class ChatWindowComponent {
     this.chatBotService.conversationHistory.subscribe((history) => {
       if (history) {
         this.conversationHistory = history?.length > 0 ? [...history] : [];
-        this.chatBotService.showLoader = false;
       }
     }, (error) => {
       this.navBarLoader = false;
