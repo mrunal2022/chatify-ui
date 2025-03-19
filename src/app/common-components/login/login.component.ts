@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, Renderer2 } from '@angular/core';
 import { environment } from 'src/app/environments/environment';
 declare const google: any;
 
@@ -7,20 +7,21 @@ declare const google: any;
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements AfterViewInit {
-  loader=false;
+export class LoginComponent {
+ public loader=false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
 
   public clientId = environment.clientId;
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.loadGoogleScript().then(() => {
       google.accounts.id.initialize({
         client_id: this.clientId,
         callback: async (response: any) => {
           try {
             this.loader=true;
+            this.cdr.detectChanges(); 
             const res = await fetch(`${environment.apiBasePath}/sign-up`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -32,6 +33,7 @@ export class LoginComponent implements AfterViewInit {
             if(data.token){
               window.location.href = "/#/chat-session";
               this.loader=false;
+              this.cdr.detectChanges(); 
             }
           } catch (error) {
             console.error("Login Error:", error);
