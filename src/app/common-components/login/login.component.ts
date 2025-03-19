@@ -31,8 +31,8 @@ export class LoginComponent implements AfterViewInit {
             localStorage.setItem("token", data.token);
             if(data.token){
               window.location.href = "/#/chat-session";
+              this.loader=false;
             }
-            this.loader=false;
           } catch (error) {
             console.error("Login Error:", error);
             this.loader=false;
