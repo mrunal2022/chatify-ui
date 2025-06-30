@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChatHistoryList, IConversationHistory, Iparts, IPrompt } from 'src/app/constants/chatbot.model';
 import { ChatbotService } from 'src/app/services/chatbot.service';
 import * as uuid from 'uuid';
+import { jwtDecode } from 'jwt-decode';
 @Component({
   selector: 'app-chat-window',
   templateUrl: './chat-window.component.html',
@@ -16,7 +17,7 @@ export class ChatWindowComponent {
   conversationHistory: IConversationHistory[] = [];
   inputPrompt: IPrompt = {
     prompt: '',
-    imgPrompt: ''
+    imgPrompt: '',
   };
   textPrompt: string;
   inputPromptLength: number = 0;
@@ -68,13 +69,23 @@ export class ChatWindowComponent {
     });
   }
 
+  getUserIdFromToken(): any {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      return decodedToken;
+    }
+  }
+
   getChatHistoryList() {
     this.navBarLoader = true;
+
 
     this.chatBotService.getChatHistoryList().subscribe({
       next: (res) => {
         if (res) {
           this.chatHistoryList = [...res];
+          this.chatHistoryList = this.chatHistoryList.filter(chat => chat?.userId === this.getUserIdFromToken()?.email)
         }
         this.navBarLoader = false;
       },
@@ -203,7 +214,8 @@ export class ChatWindowComponent {
     let formattedInputprompt = {
       chatId: this.chatId,
       prompt: this.inputPrompt.prompt,
-      imgPrompt: this.inputPrompt.imgPrompt?.split(',')[1]
+      imgPrompt: this.inputPrompt.imgPrompt?.split(',')[1],
+      userId:this.getUserIdFromToken()?.email
     }
     this.chatBotService.getResponseFromGemini(formattedInputprompt).subscribe((res) => {
       this.inputPrompt.prompt = '';
