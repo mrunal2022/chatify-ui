@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'welcome-template',
@@ -6,6 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./welcome-template.component.scss']
 })
 export class WelcomeTemplateComponent {
+  firstName: string = '';
 
   public taskCards = [
     {
@@ -26,4 +28,11 @@ export class WelcomeTemplateComponent {
     }
   ];
 
+  ngOnInit() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      this.firstName = decodedToken["name"].split(' ')[0];
+    }
+  }
 }
