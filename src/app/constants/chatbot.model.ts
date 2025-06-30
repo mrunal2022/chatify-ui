@@ -1,6 +1,8 @@
 export class IPrompt {
     prompt: string;
     imgPrompt?: string;
+    chatId?: string;
+    userId?: string;
 }
 
 export interface IConversationHistory{
