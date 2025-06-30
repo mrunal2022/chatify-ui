@@ -29,7 +29,7 @@ export class WelcomeTemplateComponent {
   ];
 
   ngOnInit() {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
       this.firstName = decodedToken["name"].split(' ')[0];

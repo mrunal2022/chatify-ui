@@ -70,7 +70,7 @@ export class ChatWindowComponent {
   }
 
   getUserIdFromToken(): any {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       const decodedToken = jwtDecode(token);
       return decodedToken;
