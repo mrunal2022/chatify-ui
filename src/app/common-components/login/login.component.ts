@@ -29,7 +29,7 @@ export class LoginComponent {
             });
 
             const data = await res.json();
-            localStorage.setItem("token", data.token);
+            sessionStorage.setItem("token", data.token);
             if(data.token){
               window.location.href = "/#/chat-session";
               this.loader=false;
