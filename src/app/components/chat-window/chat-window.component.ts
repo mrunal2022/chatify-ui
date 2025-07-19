@@ -77,7 +77,6 @@ export class ChatWindowComponent {
       next: (res) => {
         if (res) {
           this.chatHistoryList = [...res];
-          // this.chatHistoryList = this.chatHistoryList.filter(chat => chat?.userId === this.getUserIdFromToken()?.email)
         }
         this.navBarLoader = false;
       },
