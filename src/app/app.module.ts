@@ -23,6 +23,9 @@ import { CommonModule } from '@angular/common';
 import { CircularSpinnerComponent } from './common-components/circular-spinner/circular-spinner.component';
 import { WelcomeTemplateComponent } from './common-components/welcome-template/welcome-template.component';
 import { LoginComponent } from './common-components/login/login.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth.interceptor';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,7 +56,7 @@ import { LoginComponent } from './common-components/login/login.component';
     CommonModule,
     MatProgressSpinnerModule,
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

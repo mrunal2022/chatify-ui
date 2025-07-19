@@ -69,14 +69,6 @@ export class ChatWindowComponent {
     });
   }
 
-  getUserIdFromToken(): any {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return decodedToken;
-    }
-  }
-
   getChatHistoryList() {
     this.navBarLoader = true;
 
@@ -85,7 +77,7 @@ export class ChatWindowComponent {
       next: (res) => {
         if (res) {
           this.chatHistoryList = [...res];
-          this.chatHistoryList = this.chatHistoryList.filter(chat => chat?.userId === this.getUserIdFromToken()?.email)
+          // this.chatHistoryList = this.chatHistoryList.filter(chat => chat?.userId === this.getUserIdFromToken()?.email)
         }
         this.navBarLoader = false;
       },
@@ -215,7 +207,6 @@ export class ChatWindowComponent {
       chatId: this.chatId,
       prompt: this.inputPrompt.prompt,
       imgPrompt: this.inputPrompt.imgPrompt?.split(',')[1],
-      userId:this.getUserIdFromToken()?.email
     }
     this.chatBotService.getResponseFromGemini(formattedInputprompt).subscribe((res) => {
       this.inputPrompt.prompt = '';
